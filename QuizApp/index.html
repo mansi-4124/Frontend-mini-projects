@@ -10,38 +10,40 @@
     <div id="start-screen" class="screen">
       <h1>Quiz App</h1>
       <p class="subtitle">Test your knowledge</p>
-      <div class="form-group">
-        <label for="player-name">Player Name: </label>
-        <input type="text" id="player-name" placeholder="Enter your name" />
-      </div>
-      <div class="form-group">
-        <label for="category">Select Category: </label>
-        <select id="category">
-          <option value="9">General Knowledge</option>
-          <option value="21">Sports</option>
-          <option value="23">History</option>
-          <option value="27">Animals</option>
-        </select>
-      </div>
+      <form id="quiz-setup-form">
+        <div class="form-group">
+          <label for="player-name">Player Name: </label>
+          <input type="text" id="player-name" placeholder="Enter your name" />
+        </div>
+        <div class="form-group">
+          <label for="category">Select Category: </label>
+          <select id="category">
+            <option value="9">General Knowledge</option>
+            <option value="21">Sports</option>
+            <option value="23">History</option>
+            <option value="27">Animals</option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="difficulty">Select Difficulty: </label>
-        <select id="difficulty">
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-      </div>
+        <div class="form-group">
+          <label for="difficulty">Select Difficulty: </label>
+          <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="amount">Number of Questions: </label>
-        <select id="amount">
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-        </select>
-      </div>
-      <button id="start-btn">Start Quiz</button>
+        <div class="form-group">
+          <label for="amount">Number of Questions: </label>
+          <select id="amount">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+          </select>
+        </div>
+        <button id="start-btn">Start Quiz</button>
+      </form>
     </div>
 
     <!-- SCREEN 2 : Question Screen-->
@@ -96,6 +98,10 @@
       <p class="highscore-message" id="highscore-message" hidden="true">
         It's your highscore!!🎉
       </p>
+      <div id="leaderboard-container">
+        <h3>Leaderboard</h3>
+        <ul id="leaderboard-list"></ul>
+      </div>
       <button id="play-again-btn">Play Again</button>
     </div>
     <script src="js/api.js"></script>

@@ -20,6 +20,7 @@ const categoryEl = document.getElementById("category");
 const difficultyEl = document.getElementById("difficulty");
 const amountEl = document.getElementById("amount");
 const playerNameEl = document.getElementById("player-name");
+const quizForm = document.getElementById("quiz-setup-form");
 
 const questionText = document.getElementById("question-text");
 const questionCounter = document.getElementById("question-counter");
@@ -44,7 +45,9 @@ function showScreen(screen) {
 }
 
 /* Start the quiz */
-startBtn.addEventListener("click", async function () {
+quizForm.addEventListener("submit", async function (e) {
+  e.preventDefault();
+
   const amount = amountEl.value;
   const category = categoryEl.value;
   const difficulty = difficultyEl.value;
@@ -144,8 +147,21 @@ function showResults() {
     highscoreMessageEl.hidden = false;
     highscoreMessageEl.textContent = `First score saved for ${playerName}! 🎉`;
   }
-
+  allScores.sort((a, b) => b.score - a.score);
   localStorage.setItem("quiz_leaderboard", JSON.stringify(allScores));
+
+  const list = document.getElementById("leaderboard-list");
+  list.innerHTML = "";
+  const topScores = allScores.slice(0, 5);
+  topScores.forEach((record, index) => {
+    const li = document.createElement("li");
+    li.className = "leaderboard-item";
+    if (record.name === playerName) li.classList.add("highlight");
+    li.style.animationDelay = `${index * 0.15}s`;
+    li.innerHTML = `<span>#${index + 1} ${record.name}</span> <span>${record.score}</span>`;
+    list.appendChild(li);
+  });
+
   const totalSeconds = Math.round((Date.now() - quizStartTime) / 1000);
   playerNameDisplay.textContent = playerName;
   finalScoreEl.textContent = score + " / " + questions.length * 10;
@@ -158,4 +174,10 @@ function showResults() {
 /* Play again */
 playAgainBtn.addEventListener("click", function () {
   showScreen(startScreen);
+});
+
+window.addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && !resultsScreen.classList.contains("hidden")) {
+    showScreen(startScreen);
+  }
 });
