@@ -10,7 +10,10 @@
     <div id="start-screen" class="screen">
       <h1>Quiz App</h1>
       <p class="subtitle">Test your knowledge</p>
-
+      <div class="form-group">
+        <label for="player-name">Player Name: </label>
+        <input type="text" id="player-name" placeholder="Enter your name" />
+      </div>
       <div class="form-group">
         <label for="category">Select Category: </label>
         <select id="category">
@@ -69,7 +72,9 @@
     <!-- SCREEN 4 : Results Screen-->
     <div id="results-screen" class="screen hidden">
       <h2>Quiz Completed!</h2>
-      <p class="subtitle">Here's how you did</p>
+      <p class="subtitle">
+        Here's how you did, <span id="player-name-display">Player</span>!
+      </p>
       <div id="results-summary">
         <div class="result-stat">
           <span class="stat-label">Score</span>
@@ -88,6 +93,9 @@
           <span class="stat-value" id="time-taken">0s</span>
         </div>
       </div>
+      <p class="highscore-message" id="highscore-message" hidden="true">
+        It's your highscore!!🎉
+      </p>
       <button id="play-again-btn">Play Again</button>
     </div>
     <script src="js/api.js"></script>

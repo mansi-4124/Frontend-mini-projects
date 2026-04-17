@@ -5,6 +5,7 @@ let score = 0;
 let correctCount = 0;
 let wrongCount = 0;
 let quizStartTime = null;
+let playerName = "";
 
 /* DOM References */
 const startScreen = document.getElementById("start-screen");
@@ -18,6 +19,7 @@ const playAgainBtn = document.getElementById("play-again-btn");
 const categoryEl = document.getElementById("category");
 const difficultyEl = document.getElementById("difficulty");
 const amountEl = document.getElementById("amount");
+const playerNameEl = document.getElementById("player-name");
 
 const questionText = document.getElementById("question-text");
 const questionCounter = document.getElementById("question-counter");
@@ -25,10 +27,12 @@ const answersContainer = document.getElementById("answers-container");
 const progressBar = document.getElementById("progress-bar");
 const scoreEl = document.getElementById("score");
 
+const playerNameDisplay = document.getElementById("player-name-display");
 const finalScoreEl = document.getElementById("final-score");
 const correctCountEl = document.getElementById("correct-count");
 const wrongCountEl = document.getElementById("wrong-count");
 const timeTakenEl = document.getElementById("time-taken");
+const highscoreMessageEl = document.getElementById("highscore-message");
 
 /* Screen Switching */
 function showScreen(screen) {
@@ -52,6 +56,7 @@ startBtn.addEventListener("click", async function () {
     correctCount = 0;
     wrongCount = 0;
     quizStartTime = Date.now();
+    playerName = playerNameEl.value.trim() || "Player";
 
     showScreen(questionScreen);
     showQuestion();
@@ -123,7 +128,26 @@ function handleAnswer(selected) {
 function showResults() {
   clearTimer();
   progressBar.style.width = "100%";
+  const allScores = JSON.parse(localStorage.getItem("quiz_leaderboard")) || [];
+  const playerRecordIndex = allScores.findIndex(
+    (record) => record.name === playerName,
+  );
+
+  if (playerRecordIndex !== -1) {
+    if (score > allScores[playerRecordIndex].score) {
+      allScores[playerRecordIndex].score = score;
+      highscoreMessageEl.hidden = false;
+      highscoreMessageEl.textContent = `Personal Best for ${playerName}!! 🎉`;
+    }
+  } else {
+    allScores.push({ name: playerName, score: score });
+    highscoreMessageEl.hidden = false;
+    highscoreMessageEl.textContent = `First score saved for ${playerName}! 🎉`;
+  }
+
+  localStorage.setItem("quiz_leaderboard", JSON.stringify(allScores));
   const totalSeconds = Math.round((Date.now() - quizStartTime) / 1000);
+  playerNameDisplay.textContent = playerName;
   finalScoreEl.textContent = score + " / " + questions.length * 10;
   correctCountEl.textContent = correctCount;
   wrongCountEl.textContent = wrongCount;
