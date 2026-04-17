@@ -357,3 +357,22 @@ input {
     transform: translateX(0);
   }
 }
+
+#share-btn {
+  background-color: #16213e; /* Different color to distinguish from primary action */
+  border: 1.5px solid #e94560;
+  margin-top: 1.5rem; /* Space it out from the leaderboard */
+}
+
+#share-btn:hover {
+  background-color: #0f3460;
+}
+
+#share-canvas {
+  position: absolute;
+  left: -9999px; /* Better than display: none for some older browser engines */
+}
+
+#results-screen button {
+  margin-bottom: 0.5rem;
+}

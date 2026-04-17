@@ -38,6 +38,9 @@ const correctCountEl = document.getElementById("correct-count");
 const wrongCountEl = document.getElementById("wrong-count");
 const timeTakenEl = document.getElementById("time-taken");
 const highscoreMessageEl = document.getElementById("highscore-message");
+const shareBtn = document.getElementById("share-btn");
+const canvas = document.getElementById("share-canvas");
+const ctx = canvas.getContext("2d");
 
 /* Screen Switching */
 function showScreen(screen) {
@@ -214,3 +217,38 @@ function playTone(freq, type, duration) {
   oscillator.start();
   oscillator.stop(audioCtx.currentTime + duration);
 }
+
+shareBtn.addEventListener("click", async () => {
+  await document.fonts.ready;
+  ctx.fillStyle = "#1a1a2e";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#e94560";
+  ctx.font = "bold 40px Segoe UI";
+  ctx.fillText("Quiz Results!", 50, 80);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "24px Segoe UI";
+  ctx.fillText(`Player: ${playerName}`, 50, 150);
+  ctx.fillText(`Final Score: ${score} / ${questions.length * 10}`, 50, 200);
+  ctx.fillText(`Time Taken: ${timeTakenEl.textContent}`, 50, 250);
+
+  canvas.toBlob(async (blob) => {
+    const file = new File([blob], "score.png", { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "My Quiz Score!",
+          text: `Check out my score on this quiz! I got ${score} points!`,
+        });
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      const link = document.createElement("a");
+      link.download = "score.png";
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+  }, "image/png");
+});
