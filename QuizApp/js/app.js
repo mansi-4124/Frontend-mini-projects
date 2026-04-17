@@ -6,6 +6,7 @@ let correctCount = 0;
 let wrongCount = 0;
 let quizStartTime = null;
 let playerName = "";
+let audioCtx;
 
 /* DOM References */
 const startScreen = document.getElementById("start-screen");
@@ -27,6 +28,9 @@ const questionCounter = document.getElementById("question-counter");
 const answersContainer = document.getElementById("answers-container");
 const progressBar = document.getElementById("progress-bar");
 const scoreEl = document.getElementById("score");
+
+const playCorrectSound = () => playTone(880, "sine", 0.5);
+const playWrongSound = () => playTone(110, "square", 0.3);
 
 const playerNameDisplay = document.getElementById("player-name-display");
 const finalScoreEl = document.getElementById("final-score");
@@ -106,6 +110,7 @@ function handleAnswer(selected) {
     btn.classList.add("disabled");
   });
   if (selected === q.correct) {
+    playCorrectSound();
     score += 10;
     correctCount += 1;
     scoreEl.textContent = score;
@@ -114,6 +119,7 @@ function handleAnswer(selected) {
       if (btn.textContent === q.correct) btn.classList.add("correct");
     });
   } else {
+    playWrongSound();
     wrongCount += 1;
     buttons.forEach(function (btn) {
       if (btn.textContent === selected) btn.classList.add("wrong");
@@ -181,3 +187,30 @@ window.addEventListener("keydown", function (e) {
     showScreen(startScreen);
   }
 });
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+function playTone(freq, type, duration) {
+  initAudio();
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(
+    0.0001,
+    audioCtx.currentTime + duration,
+  );
+
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + duration);
+}
